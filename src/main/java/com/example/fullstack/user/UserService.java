@@ -3,7 +3,11 @@ package com.example.fullstack.user;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.hibernate.ObjectNotFoundException;
 
 import com.example.fullstack.project.Project;
@@ -15,6 +19,13 @@ import io.smallrye.mutiny.Uni;
 
 @ApplicationScoped
 public class UserService {
+
+    private final JsonWebToken jwt;
+
+    @Inject
+    public UserService(JsonWebToken jwt) {
+        this.jwt = jwt;
+    }
 
     public Uni<User> findById(long id) {
         return User.<User>findById(id).onItem().ifNull()
@@ -38,7 +49,10 @@ public class UserService {
     @ReactiveTransactional
     public Uni<User> update(User user) {
         return findById(user.id)
-            .chain(u -> User.getSession())
+            .chain(u -> {
+                user.setPassword(u.password);
+                return User.getSession();
+            })
             .chain(s -> s.merge(user));
     }
 
@@ -54,7 +68,21 @@ public class UserService {
     }
 
     public Uni<User> getCurrentUser() {
-        // TODO: replace implementation once security is added to the project
-        return User.find("order by ID").firstResult();
+        return findByName(jwt.getName());
+    }
+
+    public static boolean matches(User user, String password) {
+        return BcryptUtil.matches(password, user.password);
+    }
+
+    @ReactiveTransactional
+    public Uni<User> changePassword(String currentPassword, String newPassword) {
+        return getCurrentUser().chain(u -> {
+            if (!matches(u, currentPassword)) {
+                throw new ClientErrorException("Current password does not match", Response.Status.CONFLICT);
+            }
+            u.setPassword(BcryptUtil.bcryptHash(newPassword));
+            return u.persistAndFlush();
+        });
     }
 }

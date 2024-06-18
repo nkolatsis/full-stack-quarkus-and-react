@@ -2,6 +2,7 @@ package com.example.fullstack.user;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -16,7 +17,7 @@ import org.jboss.resteasy.reactive.ResponseStatus;
 
 import io.smallrye.mutiny.Uni;
 
-
+@RolesAllowed("admin")
 @Path("/api/v1/users")
 public class UserResource {
     
@@ -62,8 +63,16 @@ public class UserResource {
 
     @GET
     @Path("self")
+    @RolesAllowed("user")
     public Uni<User> getCurrentUser() {
         return userService.getCurrentUser();
+    }
+
+    @PUT
+    @Path("/self/password")
+    @RolesAllowed("user")
+    public Uni<User> changePassword(PasswordChange passwordChange) {
+        return userService.changePassword(passwordChange.currentPassword(), passwordChange.newPassword());
     }
 
 

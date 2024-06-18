@@ -2,6 +2,7 @@ package com.example.fullstack.task;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -15,6 +16,7 @@ import org.jboss.resteasy.reactive.ResponseStatus;
 
 import io.smallrye.mutiny.Uni;
 
+@RolesAllowed("user")
 @Path("/api/v1/tasks")
 public class TaskResource {
     
