@@ -1,54 +1,93 @@
 import React from 'react'
 import {Link, useMatch} from 'react-router-dom'
+
 import {
-    Box,
-    Drawer,
-    List,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Toolbar,
-    Tooltip
+  Box,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Tooltip
 } from '@mui/material';
 import InboxIcon from '@mui/icons-material/Inbox';
+import CheckIcon from '@mui/icons-material/Check';
+import PersonIcon from '@mui/icons-material/Person';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import AddIcon from '@mui/icons-material/Add';
+import SnippetFolderIcon from '@mui/icons-material/SnippetFolder';
+import CircleIcon from '@mui/icons-material/Circle';
+
+import { HasRole } from '../auth/HasRole';
 
 const Item = ({Icon, iconSize, title, to, disableTooltip=false}) => {
-    const match = Boolean(useMatch(to));
-    return (
-        <ListItemButton component={Link} to={to} selected={match}>
-            {Icon &&
-                <Tooltip title={title} placement="right" disableHoverListener={disableTooltip}>
-                    <ListItemIcon>
-                        <Icon fontSize={iconSize} />
-                    </ListItemIcon>
-                </Tooltip>
-            }
-            <ListItemText primary={title} />
-        </ListItemButton>
-    )
+  const match = Boolean(useMatch(to));
+  return (
+    <ListItemButton component={Link} to={to} selected={match}>
+      {Icon && <Tooltip title={title} placement="right" disableHoverListener={disableTooltip}>
+        <ListItemIcon><Icon fontSize={iconSize} /></ListItemIcon>
+      </Tooltip>
+      }
+      <ListItemText primary={title} />
+    </ListItemButton>
+  )
 };
 
-export const MainDrawer = ({drawerOpen, toggleDrawer}) => (
-    <Drawer
-        open={drawerOpen}
-        onClose={toggleDrawer}
-        variant='permanent'
-        sx={{
-            width: theme => drawerOpen ? theme.layout.drawerWidth : theme.spacing(7),
-            '& .MuiDrawer-paper': theme => ({
-                width: theme.layout.drawerWidth,
-                ...(!drawerOpen && {
-                    width: theme.spacing(7),
-                    overflowX: 'hidden'
-                })
-            })
-        }}
+const Projects = ({drawerOpen, openNewProject, projects}) => (
+  <>
+    <Divider />
+    <ListItem
+      secondaryAction={drawerOpen &&
+        <IconButton edge='end' onClick={openNewProject}>
+          <AddIcon />
+        </IconButton>
+      }
     >
-        <Toolbar />
-        <Box sx={{overflow: drawerOpen ? 'auto' : 'hidden'}}>
-            <List>
-                <Item disableTooltip={drawerOpen} Icon={InboxIcon} title='Todo' to='/' />
-            </List>
-        </Box>
-    </Drawer>
-)
+      <ListItemIcon><SnippetFolderIcon /></ListItemIcon>
+      <ListItemText primaryTypographyProps={{fontWeight: 'medium'}}>Projects</ListItemText>
+    </ListItem>
+    {Array.from(projects).map(p => {
+      return <Item
+        key={p.id} disableTooltip={drawerOpen} Icon={CircleIcon}
+        iconSize='small' title={p.name} to={`/tasks/project/${p.id}`}
+      />
+    })}
+  </>
+);
+
+
+export const MainDrawer = ({drawerOpen, toggleDrawer, openNewProject, projects = []}) => (
+  <Drawer
+    open={drawerOpen} onClose={toggleDrawer} variant='permanent'
+    sx={{
+      width: theme => drawerOpen ? theme.layout.drawerWidth : theme.spacing(7),
+      '& .MuiDrawer-paper': theme => ({
+        width: theme.layout.drawerWidth,
+        ...(!drawerOpen && {
+          width: theme.spacing(7),
+          overflowX: 'hidden'
+        })
+      })
+    }}
+  >
+    <Toolbar />
+    <Box sx={{overflow: drawerOpen ? 'auto' : 'hidden'}}>
+      <List>
+        <Item disableTooltip={drawerOpen} Icon={InboxIcon} title='Todo' to='/tasks/pending' />
+        <Item disableTooltip={drawerOpen} Icon={CheckIcon} title='Completed' to='/tasks/completed' />
+        <Item disableTooltip={drawerOpen} Icon={AssignmentIcon} title='All' to='/tasks' />
+        <Projects
+          drawerOpen={drawerOpen} openNewProject={openNewProject} projects={projects}
+        />
+        <HasRole role='admin'>
+          <Divider />
+          <Item disableTooltip={drawerOpen} Icon={PersonIcon} title='Users' to='/users' />
+        </HasRole>
+      </List>
+    </Box>
+  </Drawer>
+);

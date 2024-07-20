@@ -55,7 +55,6 @@ public class TaskResource {
 
     @PUT
     @Path("/{id}/complete")
-    @Consumes(MediaType.APPLICATION_JSON)
     public Uni<Boolean> setComplete(long id, boolean complete) {
         return taskService.setComplete(id, complete);
     }
