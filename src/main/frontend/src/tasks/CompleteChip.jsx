@@ -6,5 +6,6 @@ export const CompleteChip = ({task}) => Boolean(task?.complete) && (
   <Chip
     icon={<CheckIcon />} color='success' 
     label={new Date(task.complete).toLocaleDateString()} variant='outlined'
+    data-testid='complete-chip'
   />
 );

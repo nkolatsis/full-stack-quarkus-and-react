@@ -1,5 +1,5 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import {logout, reducer as authReducer} from './auth/redux';
+import {logout, reducer as authReducer} from './auth';
 import {reducer as layoutReducer} from './layout/redux';
 import { api as userApi } from './users/api';
 import { api as projectApi } from './projects';

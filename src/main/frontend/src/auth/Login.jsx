@@ -37,7 +37,7 @@ export const Login = () => {
         <Box noValidate sx={{mt: 1}}>
           <TextField margin='normal' required fullWidth autoFocus
               label='Username' name='username' onChange={onChange} value={values.username}
-            />
+          />
           <TextField type='password' margin='normal' required fullWidth
             label='Password' name='password' onChange={onChange} value={values.password}
             onKeyDown={e => e.key === 'Enter' && sendLogin()}
@@ -49,7 +49,7 @@ export const Login = () => {
       </Box>
       <Snackbar
         open={Boolean(error)} message={error} autoHideDuration={6000}
-        onClonse={() => setError(null)}
+        onClose={() => setError(null)}
       />
     </Container>
   );
