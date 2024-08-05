@@ -40,6 +40,7 @@ public class RestExceptionHandler implements ExceptionMapper<HibernateException>
     }
 
     public Response toResponse(HibernateException exception) {
+        exception.printStackTrace();
         if (hasExceptionInChain(exception, ObjectNotFoundException.class)) {
             return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).build();
         }
