@@ -53,6 +53,11 @@
       <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkiverse.quinoa</groupId>
+      <artifactId>quarkus-quinoa</artifactId>
+      <version>1.2.9</version>
+    </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-test-security-jwt</artifactId>
       <scope>test</scope>
@@ -146,9 +151,9 @@
         </plugins>
       </build>
       <properties>
-        <quarkus.package.type>native</quarkus.package.type>
         <quarkus.native.container-build>true</quarkus.native.container-build>
         <quarkus.native.builder-image>quay.io/quarkus/ubi-quarkus-mandrel:21.3-java17</quarkus.native.builder-image>
+        <quarkus.package.type>native</quarkus.package.type>
       </properties>
     </profile>
   </profiles>
