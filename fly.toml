@@ -1,0 +1,23 @@
+# fly.toml app configuration file generated for task-manager-restless-night-3271 on 2024-08-09T13:17:06+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'task-manager-restless-night-3271'
+primary_region = 'ams'
+
+[build]
+  image = 'nkolatsis/task-manager:fly'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
