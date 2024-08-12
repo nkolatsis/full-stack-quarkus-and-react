@@ -42,9 +42,9 @@ describe('projects module tests', () => {
     window.history.pushState({}, '', '/');
 
     render(<App />);
-    //expect(window.location.pathname).toEqual('/');  // Currently failing because /auth/login handler not matching
+    expect(window.location.pathname).toEqual('/');  // Currently failing because /auth/login handler not matching
     
-    /*server.use(http.post(`${server.apiUrl}/projects`, async ({request}) => {
+    server.use(http.post(`${server.apiUrl}/projects`, async ({request}) => {
       let formData = await request.json()
       console.log(formData)
       return new HttpResponse.json({name: formData.name}, {status: 201})
@@ -55,6 +55,6 @@ describe('projects module tests', () => {
     userEvent.type(within(dialog).getByLabelText(/Name/), 'new-project');
     userEvent.click(screen.getByText(/Save/));
     await waitForElementToBeRemoved(dialog);
-    expect(screen.queryByRole('dialog')).toBeNull();*/
+    expect(screen.queryByRole('dialog')).toBeNull();
   })
 })
