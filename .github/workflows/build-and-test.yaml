@@ -25,4 +25,4 @@ jobs:
       - name: Build and test
         run: ./mvnw clean package
       - name: Test frontend
-        run: cd src/main/frontend && npm test -- --all --watchAll=false
+        run: cd src/main/frontend && npm test --watchAll=false
